@@ -1,0 +1,171 @@
++++
+title = "Installing and Configuring the AWS Service Broker"
+chapter = false
+weight = 1
++++
+
+:imagesdir: /images
+
+== Installing and Configuring the AWS Service Broker.
+
+== Goals:
+Explore the install and configure process for the AWS Service Broker.
+
+Step 1:: Explore IAM user and role policies
+
+The AWS Service Broker packages all services into CloudFormation templates that are executed by the broker.
+The broker can use a role if the broker is installed into an EC2 instance with access to the ec2 metadata endpoint (169.254.169.254).
+Alternatively, an IAM user and static keypair can be created for the broker to use. 
+
+Note: the Service User/Role policy expects the CloudFormation role to be named AWSServiceBrokerCFNRole, if you name
+it something else you will also need to update this policy to reflect the name.
+
+----
+The IAM user/role requires the following
+
+IAM policy:
+Service User/Role
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "cloudformation:*",
+                "ssm:*",
+                "dynamodb:*",
+                "s3:*"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "iam:PassRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:role/AWSServiceBrokerCFNRole"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+}
+----
+
+A CloudFormation service role is also required, an example of a broad policy to enable all current service plans is included below, this can be scoped down if only specific services are required:
+
+CloudFormation Role
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "cloudformation:*",
+                "iam:*",
+                "kms:*",
+                "ssm:*",
+                "ec2:*",
+                "lambda:*",
+                "athena:*",
+                "dynamodb:*",
+                "elasticache:*",
+                "elasticmapreduce:*",
+                "rds:*",
+                "redshift:*",
+                "route53:*",
+                "s3:*",
+                "sns:*",
+                "sqs:*",
+                "polly:*",
+                "lex:*",
+                "translate:*",
+                "rekognition:*",
+                "kinesis:*"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+}
+
+----
+
+Step 2:: Explore DynamoDB Table.
+
+The broker uses a DynamoDB table as a persistent store for service instances and as a distributed cache/lock. 
+To create the table the following command can be run using the AWS CLI:
+
+----
+aws dynamodb create-table --attribute-definitions \
+AttributeName=id,AttributeType=S AttributeName=userid,AttributeType=S \
+AttributeName=type,AttributeType=S --key-schema AttributeName=id,KeyType=HASH \
+AttributeName=userid,KeyType=RANGE --global-secondary-indexes \
+'IndexName=type-userid-index,KeySchema=[{AttributeName=type,KeyType=HASH},{AttributeName=userid,KeyType=RAN
+--provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+--region us-east-1 --table-name awssb
+----
+
+
+Step 3:: Download the AWS Service Broker Tile:
+*This has been completed as part of the LAB Setup, we will exlpore the process, should you be running this on your own you can complete all the steps in the Lab-Setup Module*
+----
+wget https://awsservicebrokeralpha.s3.amazonaws.com/pcf/aws-service-broker-latest.pivotal
+----
+
+
+Step 4:: Login to Ops Manager and import the tile:
+*This has been completed as part of the LAB Setup, we will exlpore the process, should you be running this on your own you can complete all the steps in the Lab-Setup Module*
+----
+https://opsman.pcf.cloudfoundry.awsworkshop.io/
+Click on import product on the top left.
+browse to the downloaded Service Broker tile.
+The new tile install will appear on the left.
+Click on the + symbol to install the tile.
+----
+
+image::SBinstall01.gif[Service Broker Install]
+
+Step 10:: Complete configuration in the AWS Service Broker Configuration section. 
+*This has been completed as part of the LAB Setup, we will exlpore the process, should you be running this on your own you can complete all the steps in the Lab-Setup Module*
+----
+Select the service broker tile.
+Select Service Broker Configuration.
+----
+
+image::SBconf01.png[Service Broker config]
+
+
+Take note of the following fields:
+AWS Access Key ID and AWS Secret Access ‑ if you are using an ec2 instance role attached to the broker hosts, specify "use‑role" as the value for both fields, otherwise specify the credentials for the user.
+
+AWS Region ‑ this is the default region for the broker to deploy services into, and must match the region that the
+DynamoDB table created above  (this will be decoupled in an upcoming update).
+
+----
+AWS CloudFormation Role ARN ‑ specify the ARN for the CloudFormation Role created above.
+Amazon S3 Bucket ‑ specify awsservicebrokeralpha
+Amazon S3 Key Prefix ‑ specify pcf/templates/
+Amazon S3 Region ‑ specify us-west-2
+Amazon S3 Key Suffix ‑ specify -main.yaml
+Amazon DynamoDB table name ‑ specify awssb
+----
+
+Step 11:: apply changes
+*This has been completed as part of the LAB Setup, we will exlpore the process, should you be running this on your own you can complete all the steps in the Lab-Setup Module*
+
+
+== In this module:
+- We have discussed the requirements for the AWS Service Broker.
+- downloaded the Service Broker time.
+- Looked at the process to import the tile into the ops manager.
+- Configured the AWS Service Broker.
+
+
+
+
+
+

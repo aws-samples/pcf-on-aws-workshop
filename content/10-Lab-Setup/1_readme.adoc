@@ -1,0 +1,126 @@
+
+
+
+
+
++++
+title = "Workshop Lab Setup"
+chapter = false
+weight = 1
++++
+
+:imagesdir: /images
+
+== Workshop Lab Setup:
+
+This workshop is run on the AWS Quick Start for Pivotal Cloud Foundry:
+https://aws-quickstart.s3.amazonaws.com/quickstart-pivotal-cloudfoundry/doc/pivotal-cloud-foundry-on-the-aws-cloud.pdf[pivotal cloud foundry on the AWS cloud]
+
+The deployment guide discusses creating the required Route53 hosted zone and records, Amazon certificate manager certificates and creating a Pivotal network account.
+The guide then discussed launching the quick start CloudFormation stack.
+
+
+=== Please note:
+This stack can take hours to provision it is recommended to export logs to cloudwatch and set the stack to not roll back on failure under the advanced settings.
+This will allow for easier investigation should anything with the stack launch fail.
+
+== Deploy PCF Quick Start:
+
+Step 1:: Create AWS Route 53 Hosted Zone.
+
+Step 2:: Create AWS Certificate manager certificates as per deployment document.
+
+Step 3:: Create Pivotal Network account.
+----
+Create a Pivnet account at https://network.pivotal.io/.
+----
+
+Step 3b:: Collect pivnet token:
+----
+Log in to your Pivnet account from a web browser.
+Click your name in the upper-right corner.
+Choose Edit Profile.
+You’ll find your API token at the bottom of this page.
+Please use the LEGACY API TOKEN
+----
+
+Step 4:: Launch the Quick Start stack:
+----
+From the PCF / PAS quick start deployment guide launch the quick start template and provide parameter inputs.
+----
+
+Step 5:: go to dinner or a movie this will take a while...
+You can monitor this deployement via the AWS CloudFormation Console.
+
+Step 6::
+Login to the Ops manager:
+----
+http://opsman.<PCF DOMAIN>
+Apply changes.
+----
+
+
+
+
+image::opsman.png[Service Broker config]
+
+
+
+Step 7:: Clone Lab repo:
+----
+Go to to the AWS Cloud9 developer env
+cd ~/environment
+git clone https://github.com/rniksch/AWS-PCF-Workshop.git
+----
+
+Step 8:: add the cf CLI repo:
+----
+sudo wget -O /etc/yum.repos.d/cloudfoundry-cli.repo https://packages.cloudfoundry.org/fedora/cloudfoundry-cli.repo
+----
+
+Step 9:: Install cf CLI:
+----
+sudo yum install cf-cli
+----
+
+Step 10:: Login to the PCF Foundation using the cf CLI:
+----
+collect appman login details
+go to opsman
+select cred 
+scroll down to uaa
+Admin Credentials   Link to Credential
+copy the password
+cf login -a https://api.sys.pcf.cloudfoundry.awsworkshop.io -u admin --skip-ssl-validation
+using admin and password collected form previous step
+Select the system org
+Select the system space
+----
+
+Step 11:: Create users for attendee access Apps manager, orgs and spaces.
+----
+cd ~/environment
+git clone https://github.com/rniksch/AWS-PCF-Workshop.git
+cd ~/environment/PCF-on-AWS/modules/10-Lab-Setup
+./account-setup
+----
+
+
+Step 12:: Clean up:
+----
+rm -rfv ~/environment/PCF-on-AWS
+----
+
+== Lab Setup Complete
+
+
+
+
+
+
+
+
+
+
+
+
