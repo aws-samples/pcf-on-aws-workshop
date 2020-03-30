@@ -14,9 +14,9 @@ defaultContentLanguageInSubdir= true
   # See the config.toml file from this documentation site to have an example.
   #editURL = ""
   # Author of the site, will be used in meta information
-  author = "James Bland"
+  author = "Ryan Niksch"
   # Description of the site, will be used in meta information
-  description = "AWS Modernization Workshop"
+  description = "Pivotal Cloud Foundry on AWS Worksho"
   # Shows a checkmark for visited pages on the menu
   showVisitedLinks = true
   # Disable search function. It will hide search bar
