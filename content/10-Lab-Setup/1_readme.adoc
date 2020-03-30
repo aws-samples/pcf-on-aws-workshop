@@ -70,7 +70,7 @@ Step 7:: Clone Lab repo:
 ----
 Go to to the AWS Cloud9 developer env
 cd ~/environment
-git clone https://github.com/rniksch/AWS-PCF-Workshop.git
+git clone https://github.com/aws-samples/pcf-on-aws-workshop.git
 ----
 
 Step 8:: add the cf CLI repo:
@@ -100,7 +100,6 @@ Select the system space
 Step 11:: Create users for attendee access Apps manager, orgs and spaces.
 ----
 cd ~/environment
-git clone https://github.com/rniksch/AWS-PCF-Workshop.git
 cd ~/environment/PCF-on-AWS/modules/10-Lab-Setup
 ./account-setup
 ----

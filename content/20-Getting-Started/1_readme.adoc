@@ -75,7 +75,7 @@ mkdir environment
 Step 6:: Clone Lab repo:
 ----
 cd ~/environment
-git clone https://github.com/rniksch/AWS-PCF-Workshop.git
+git clone https://github.com/aws-samples/pcf-on-aws-workshop.git
 ----
 
 https://docs.cloudfoundry.org/cf-cli/install-go-cli.html#pkg-linux
