@@ -5,7 +5,7 @@ defaultContentLanguage = "en"
 title = "Pivotal Cloud Foundry on AWS"
 theme = "hugo-theme-learn"
 metaDataFormat = "yaml"
-uglyurl = “true"
+uglyurl = "true"
 defaultContentLanguageInSubdir= true
 
 [params]
